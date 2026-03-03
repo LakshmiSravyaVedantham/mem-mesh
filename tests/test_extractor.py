@@ -1,5 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
+from anthropic.types import TextBlock
 from mem_mesh.extractor import MemoryExtractor
 from mem_mesh.store import MemoryEntry
 
@@ -14,7 +15,7 @@ FIXTURE_MESSAGES = [
 
 def _make_mock_client(json_response: str) -> MagicMock:
     mock_client = MagicMock()
-    mock_content = MagicMock()
+    mock_content = MagicMock(spec=TextBlock)
     mock_content.text = json_response
     mock_response = MagicMock()
     mock_response.content = [mock_content]
@@ -69,3 +70,15 @@ def test_extract_timestamps_are_set() -> None:
     extractor = MemoryExtractor(client=mock_client)
     result = extractor.extract(FIXTURE_MESSAGES)
     assert result[0].timestamp != ""
+
+
+def test_extract_returns_empty_on_non_text_response() -> None:
+    """Guard against non-text blocks (e.g. tool_use) in response."""
+    mock_client = MagicMock()
+    mock_block = MagicMock(spec=[])  # spec=[] means no attributes at all
+    mock_response = MagicMock()
+    mock_response.content = [mock_block]
+    mock_client.messages.create.return_value = mock_response
+    extractor = MemoryExtractor(client=mock_client)
+    result = extractor.extract(FIXTURE_MESSAGES)
+    assert result == []

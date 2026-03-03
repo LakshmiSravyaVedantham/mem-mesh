@@ -35,6 +35,11 @@ class MemoryExtractor:
     def extract(
         self, messages: list[dict[str, str]], source_tool: str = "unknown"
     ) -> list[MemoryEntry]:
+        """Extract memory signals from a conversation using Claude Haiku.
+
+        Only the last 10 messages are sent to the extraction model to
+        keep token usage bounded. Returns [] if no signals found or on any error.
+        """
         if not messages:
             return []
 
@@ -56,20 +61,20 @@ class MemoryExtractor:
 
         try:
             block = response.content[0]
-            if not isinstance(block, TextBlock) and not hasattr(block, "text"):
+            if not isinstance(block, TextBlock):
                 return []
             text = block.text.strip()
             items: list[dict[str, str]] = json.loads(text)
             now = datetime.now(tz=timezone.utc).isoformat()
             return [
                 MemoryEntry(
-                    content=item["content"],
-                    category=item["category"],
+                    content=item.get("content", ""),
+                    category=item.get("category", ""),
                     source_tool=source_tool,
                     timestamp=now,
                 )
                 for item in items
                 if item.get("content") and item.get("category") in VALID_CATEGORIES
             ]
-        except (json.JSONDecodeError, KeyError, IndexError, TypeError):
+        except (IndexError, json.JSONDecodeError, TypeError):
             return []
