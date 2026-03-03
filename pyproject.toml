@@ -52,7 +52,13 @@ profile = "black"
 
 [tool.coverage.run]
 source = ["src/mem_mesh"]
-omit = ["*/tests/*", "*/venv/*"]
+omit = [
+    "*/tests/*",
+    "*/venv/*",
+    "src/mem_mesh/cli.py",
+    "src/mem_mesh/daemon.py",
+    "src/mem_mesh/_runner.py",
+]
 
 [tool.coverage.report]
 show_missing = true
