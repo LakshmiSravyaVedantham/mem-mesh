@@ -44,8 +44,7 @@ class MemoryExtractor:
             return []
 
         conversation = "\n".join(
-            f"{m['role'].upper()}: {m.get('content', '')}"
-            for m in messages[-10:]
+            f"{m['role'].upper()}: {m.get('content', '')}" for m in messages[-10:]
         )
 
         response = self.client.messages.create(

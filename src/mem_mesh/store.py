@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-
 CATEGORIES = ("preferences", "facts", "corrections")
 
 
@@ -30,9 +29,7 @@ class MemoryStore:
     def write(self, entry: MemoryEntry) -> None:
         path = self.base_dir / f"{entry.category}.md"
         with path.open("a") as f:
-            f.write(
-                f"- [{entry.timestamp}] ({entry.source_tool}) {entry.content}\n"
-            )
+            f.write(f"- [{entry.timestamp}] ({entry.source_tool}) {entry.content}\n")
 
     def read(self, category: str) -> list[MemoryEntry]:
         path = self.base_dir / f"{category}.md"

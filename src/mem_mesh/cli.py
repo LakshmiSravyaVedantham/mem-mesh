@@ -70,7 +70,9 @@ def show(category: str) -> None:
     store = MemoryStore()
     entries = store.read(category) if category != "all" else store.read_all()
     if not entries:
-        click.echo("No memories yet. Start the daemon and use an AI tool to build memory.")
+        click.echo(
+            "No memories yet. Start the daemon and use an AI tool to build memory."
+        )
         return
     current_cat = None
     for entry in entries:

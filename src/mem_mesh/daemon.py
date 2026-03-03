@@ -11,7 +11,9 @@ class Daemon:
     _PID_FILE = Path.home() / ".mem-mesh" / "daemon.pid"
 
     @classmethod
-    def start(cls, port: int = 4117, target_url: str = "https://api.anthropic.com") -> int:
+    def start(
+        cls, port: int = 4117, target_url: str = "https://api.anthropic.com"
+    ) -> int:
         if cls.is_running():
             pid = cls._read_pid()
             assert pid is not None
@@ -21,9 +23,13 @@ class Daemon:
 
         proc = subprocess.Popen(
             [
-                sys.executable, "-m", "mem_mesh._runner",
-                "--port", str(port),
-                "--target", target_url,
+                sys.executable,
+                "-m",
+                "mem_mesh._runner",
+                "--port",
+                str(port),
+                "--target",
+                target_url,
             ],
             start_new_session=True,
             stdout=subprocess.DEVNULL,

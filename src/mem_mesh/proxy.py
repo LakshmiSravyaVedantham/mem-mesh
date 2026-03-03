@@ -34,9 +34,7 @@ def build_app(
         modified = injector.inject(body)
 
         forward_headers = {
-            k: v
-            for k, v in request.headers.items()
-            if k.lower() not in _HOP_BY_HOP
+            k: v for k, v in request.headers.items() if k.lower() not in _HOP_BY_HOP
         }
 
         async with httpx.AsyncClient() as client:

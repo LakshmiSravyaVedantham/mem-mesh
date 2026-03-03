@@ -1,8 +1,10 @@
 import json
-import pytest
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
-from httpx import AsyncClient, ASGITransport
+
+import pytest
+from httpx import ASGITransport, AsyncClient
+
 from mem_mesh.proxy import build_app
 from mem_mesh.store import MemoryStore
 
@@ -19,7 +21,9 @@ def app(empty_store: MemoryStore):
 
 @pytest.mark.asyncio
 async def test_health_endpoint(app) -> None:
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
         resp = await client.get("/health")
     assert resp.status_code == 200
     assert resp.json()["status"] == "ok"
@@ -45,7 +49,9 @@ async def test_proxy_forwards_messages_request(app) -> None:
         mock_instance.post = AsyncMock(return_value=mock_resp)
         MockClient.return_value = mock_instance
 
-        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        async with AsyncClient(
+            transport=ASGITransport(app=app), base_url="http://test"
+        ) as client:
             resp = await client.post(
                 "/v1/messages",
                 json={
@@ -60,9 +66,14 @@ async def test_proxy_forwards_messages_request(app) -> None:
 
 
 @pytest.mark.asyncio
-async def test_proxy_injects_memories_when_present(app, empty_store: MemoryStore) -> None:
+async def test_proxy_injects_memories_when_present(
+    app, empty_store: MemoryStore
+) -> None:
     from mem_mesh.store import MemoryEntry
-    empty_store.write(MemoryEntry("Prefers Python", "preferences", "test", "2026-03-03T10:00:00"))
+
+    empty_store.write(
+        MemoryEntry("Prefers Python", "preferences", "test", "2026-03-03T10:00:00")
+    )
 
     captured_body: dict = {}
 
@@ -83,10 +94,16 @@ async def test_proxy_injects_memories_when_present(app, empty_store: MemoryStore
         mock_instance.post = capture_post
         MockClient.return_value = mock_instance
 
-        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        async with AsyncClient(
+            transport=ASGITransport(app=app), base_url="http://test"
+        ) as client:
             await client.post(
                 "/v1/messages",
-                json={"model": "claude-sonnet-4-6", "max_tokens": 10, "messages": [{"role": "user", "content": "hi"}]},
+                json={
+                    "model": "claude-sonnet-4-6",
+                    "max_tokens": 10,
+                    "messages": [{"role": "user", "content": "hi"}],
+                },
                 headers={"x-api-key": "test-key", "anthropic-version": "2023-06-01"},
             )
 

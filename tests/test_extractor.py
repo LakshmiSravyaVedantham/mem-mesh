@@ -1,12 +1,16 @@
-import pytest
 from unittest.mock import MagicMock
+
+import pytest
 from anthropic.types import TextBlock
+
 from mem_mesh.extractor import MemoryExtractor
 from mem_mesh.store import MemoryEntry
 
-
 FIXTURE_MESSAGES = [
-    {"role": "user", "content": "I always prefer Python over JavaScript. Don't suggest JS."},
+    {
+        "role": "user",
+        "content": "I always prefer Python over JavaScript. Don't suggest JS.",
+    },
     {"role": "assistant", "content": "Got it, I'll stick to Python."},
     {"role": "user", "content": "Also, I live in San Jose and work at a startup."},
     {"role": "assistant", "content": "Noted."},
@@ -24,14 +28,18 @@ def _make_mock_client(json_response: str) -> MagicMock:
 
 
 def test_extract_returns_list() -> None:
-    mock_client = _make_mock_client('[{"content": "Prefers Python", "category": "preferences"}]')
+    mock_client = _make_mock_client(
+        '[{"content": "Prefers Python", "category": "preferences"}]'
+    )
     extractor = MemoryExtractor(client=mock_client)
     result = extractor.extract(FIXTURE_MESSAGES)
     assert isinstance(result, list)
 
 
 def test_extract_returns_memory_entries() -> None:
-    mock_client = _make_mock_client('[{"content": "Prefers Python over JavaScript", "category": "preferences"}]')
+    mock_client = _make_mock_client(
+        '[{"content": "Prefers Python over JavaScript", "category": "preferences"}]'
+    )
     extractor = MemoryExtractor(client=mock_client)
     result = extractor.extract(FIXTURE_MESSAGES, source_tool="claude")
     assert len(result) == 1
@@ -66,7 +74,9 @@ def test_extract_filters_invalid_categories() -> None:
 
 
 def test_extract_timestamps_are_set() -> None:
-    mock_client = _make_mock_client('[{"content": "Prefers Python", "category": "preferences"}]')
+    mock_client = _make_mock_client(
+        '[{"content": "Prefers Python", "category": "preferences"}]'
+    )
     extractor = MemoryExtractor(client=mock_client)
     result = extractor.extract(FIXTURE_MESSAGES)
     assert result[0].timestamp != ""

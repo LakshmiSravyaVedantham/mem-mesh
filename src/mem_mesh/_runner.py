@@ -1,4 +1,5 @@
 """Entry point for running the proxy server as a subprocess (used by daemon)."""
+
 from __future__ import annotations
 
 import argparse
