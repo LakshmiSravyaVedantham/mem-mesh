@@ -29,7 +29,7 @@ class MemoryStore:
 
     def write(self, entry: MemoryEntry) -> None:
         path = self.base_dir / f"{entry.category}.md"
-        with open(path, "a") as f:
+        with path.open("a") as f:
             f.write(
                 f"- [{entry.timestamp}] ({entry.source_tool}) {entry.content}\n"
             )
@@ -76,12 +76,19 @@ class MemoryStore:
             path = self.base_dir / f"{category}.md"
             if not path.exists():
                 continue
-            lines = path.read_text().splitlines()
-            new_lines = [
-                line
-                for line in lines
-                if not (line.startswith("- [") and pat in line.lower())
-            ]
-            removed += len(lines) - len(new_lines)
-            path.write_text("\n".join(new_lines) + "\n")
+            lines = path.read_text().splitlines(keepends=True)
+            new_lines = []
+            for line in lines:
+                if line.startswith("- ["):
+                    # Parse content field only — match against content, not timestamp/tool
+                    try:
+                        rest = line[line.index("]") + 2 :]
+                        content = rest[rest.index(")") + 2 :].strip()
+                        if pat in content.lower():
+                            removed += 1
+                            continue
+                    except (ValueError, IndexError):
+                        pass
+                new_lines.append(line)
+            path.write_text("".join(new_lines))
         return removed

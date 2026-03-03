@@ -69,3 +69,19 @@ def test_read_empty_store_returns_empty_list(tmp_store_dir: Path) -> None:
     store = MemoryStore(tmp_store_dir)
     assert store.read("preferences") == []
     assert store.read_all() == []
+
+
+def test_forget_does_not_match_source_tool_name(tmp_store_dir: Path) -> None:
+    store = MemoryStore(tmp_store_dir)
+    store.write(MemoryEntry("Prefers Python", "preferences", "claude", "2026-03-03T10:00:00"))
+    # "claude" is the source_tool, not in content — should NOT be removed
+    removed = store.forget("claude")
+    assert removed == 0
+    assert len(store.read("preferences")) == 1
+
+
+def test_forget_zero_matches_returns_zero(tmp_store_dir: Path) -> None:
+    store = MemoryStore(tmp_store_dir)
+    store.write(MemoryEntry("Prefers Python", "preferences", "claude", "2026-03-03T10:00:00"))
+    removed = store.forget("nonexistent_pattern_xyz")
+    assert removed == 0
