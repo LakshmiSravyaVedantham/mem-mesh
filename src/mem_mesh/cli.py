@@ -33,7 +33,7 @@ def daemon_start(port: int, target: str) -> None:
     """Start the proxy daemon in the background."""
     pid = Daemon.start(port=port, target_url=target)
     click.echo(f"Daemon started (PID {pid})")
-    click.echo(f"\nSet this env var to route AI calls through mem-mesh:")
+    click.echo("\nSet this env var to route AI calls through mem-mesh:")
     click.echo(f"  export ANTHROPIC_BASE_URL=http://localhost:{port}")
 
 

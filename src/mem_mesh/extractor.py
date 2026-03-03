@@ -10,22 +10,22 @@ from mem_mesh.store import MemoryEntry
 
 VALID_CATEGORIES = frozenset({"preferences", "facts", "corrections"})
 
-EXTRACTION_PROMPT = """Extract memory signals from this AI conversation. Return a JSON array only — no prose.
-
-Each item must be: {{"content": "specific memory", "category": "preferences|facts|corrections"}}
-
-Rules:
-- preferences: user style, workflow, or tool preferences
-- facts: facts the user stated about themselves
-- corrections: things the user explicitly corrected the AI on
-- Return [] if nothing is worth remembering
-- Maximum 5 items
-- Be specific, not vague
-
-Conversation:
-{conversation}
-
-JSON array:"""
+EXTRACTION_PROMPT = (
+    "Extract memory signals from this AI conversation. "
+    "Return a JSON array only — no prose.\n\n"
+    'Each item must be: {{"content": "specific memory", '
+    '"category": "preferences|facts|corrections"}}\n\n'
+    "Rules:\n"
+    "- preferences: user style, workflow, or tool preferences\n"
+    "- facts: facts the user stated about themselves\n"
+    "- corrections: things the user explicitly corrected the AI on\n"
+    "- Return [] if nothing is worth remembering\n"
+    "- Maximum 5 items\n"
+    "- Be specific, not vague\n\n"
+    "Conversation:\n"
+    "{conversation}\n\n"
+    "JSON array:"
+)
 
 
 class MemoryExtractor:

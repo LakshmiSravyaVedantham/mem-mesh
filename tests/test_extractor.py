@@ -1,6 +1,5 @@
 from unittest.mock import MagicMock
 
-import pytest
 from anthropic.types import TextBlock
 
 from mem_mesh.extractor import MemoryExtractor

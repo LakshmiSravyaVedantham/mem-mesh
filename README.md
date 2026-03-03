@@ -3,7 +3,6 @@
 Universal AI memory layer. One persistent memory for all your AI tools — Claude, ChatGPT, Cursor, Copilot, Gemini.
 
 [![CI](https://github.com/LakshmiSravyaVedantham/mem-mesh/actions/workflows/ci.yml/badge.svg)](https://github.com/LakshmiSravyaVedantham/mem-mesh/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/mem-mesh)](https://pypi.org/project/mem-mesh/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 

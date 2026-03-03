@@ -1,17 +1,15 @@
 from pathlib import Path
 
-import pytest
-
 from mem_mesh.store import MemoryEntry, MemoryStore
 
 
 def test_store_creates_directory(tmp_store_dir: Path) -> None:
-    store = MemoryStore(tmp_store_dir)
+    MemoryStore(tmp_store_dir)
     assert tmp_store_dir.exists()
 
 
 def test_store_creates_default_files(tmp_store_dir: Path) -> None:
-    store = MemoryStore(tmp_store_dir)
+    MemoryStore(tmp_store_dir)
     assert (tmp_store_dir / "preferences.md").exists()
     assert (tmp_store_dir / "facts.md").exists()
     assert (tmp_store_dir / "corrections.md").exists()

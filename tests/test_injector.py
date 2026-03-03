@@ -1,7 +1,5 @@
 from pathlib import Path
 
-import pytest
-
 from mem_mesh.injector import MemoryInjector
 from mem_mesh.store import MemoryEntry, MemoryStore
 
@@ -70,5 +68,5 @@ def test_inject_limits_to_top_5_memories(tmp_path: Path) -> None:
     injector = MemoryInjector(store)
     result = injector.inject({"messages": []})
     memory_block = result["system"].split("[/MEMORY CONTEXT]")[0]
-    lines = [l for l in memory_block.splitlines() if l.startswith("- ")]
+    lines = [ln for ln in memory_block.splitlines() if ln.startswith("- ")]
     assert len(lines) <= 5

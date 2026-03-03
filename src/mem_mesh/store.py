@@ -77,7 +77,7 @@ class MemoryStore:
             new_lines = []
             for line in lines:
                 if line.startswith("- ["):
-                    # Parse content field only — match against content, not timestamp/tool
+                    # Match against content only, not tool or timestamp
                     try:
                         rest = line[line.index("]") + 2 :]
                         content = rest[rest.index(")") + 2 :].strip()
